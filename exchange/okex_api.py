@@ -1,8 +1,9 @@
 from okex.core import OKExAPI
 from enum import Enum
+import numpy as np
 import time
 
-import numpy as np
+from database.config import EXCHANGE_DATA
 
 
 class OkexOperation(Enum):
@@ -16,8 +17,8 @@ class OkexOperation(Enum):
 class OkexClientWrapper:
     MAX_TRIES = 3
     SLEEP_TRIES = 1
-    API_KEY = ""
-    API_SECRET = ""
+    API_KEY = EXCHANGE_DATA["okex"]["api_key"]
+    API_SECRET = EXCHANGE_DATA["okex"]["api_secret"]
 
     def __init__(self):
         self._client = OKExAPI(self.API_KEY, self.API_SECRET)

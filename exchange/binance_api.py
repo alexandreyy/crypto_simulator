@@ -1,9 +1,10 @@
 from binance.client import Client
 from enum import Enum
+import numpy as np
 import re
 import time
 
-import numpy as np
+from database.config import EXCHANGE_DATA
 
 
 class BinanceOperation(Enum):
@@ -15,9 +16,9 @@ class BinanceOperation(Enum):
 
 class BinanceClientWrapper:
     MAX_TRIES = 3
-    SLEEP_TRIES = 1
-    API_KEY = ""
-    API_SECRET = ""
+    SLEEP_TRIES = 1    
+    API_KEY = EXCHANGE_DATA["binance"]["api_key"]
+    API_SECRET = EXCHANGE_DATA["binance"]["api_secret"]
 
     def __init__(self):
         self._client = Client(self.API_KEY, self.API_SECRET)

@@ -3,6 +3,7 @@ from huobi import HuobiRestClient as Client
 import re
 import time
 
+from database.config import EXCHANGE_DATA
 from exchange.rest_api import RestClient
 import numpy as np
 
@@ -18,9 +19,9 @@ class HuobiOperation(Enum):
 
 class HuobiClientWrapper:
     MAX_TRIES = 3
-    SLEEP_TRIES = 1
-    API_KEY = ""
-    API_SECRET = ""
+    SLEEP_TRIES = 1    
+    API_KEY = EXCHANGE_DATA["huobi"]["api_key"]
+    API_SECRET = EXCHANGE_DATA["huobi"]["api_secret"]
 
     def __init__(self):
         self._client = Client(self.API_KEY, self.API_SECRET)

@@ -1,0 +1,1 @@
+export PYTHONPATH=$PYTHONPATH:$HOME/Workspace/cml/database:$HOME/Workspace/cml/exchange:$HOME/Workspace/cml/simulation

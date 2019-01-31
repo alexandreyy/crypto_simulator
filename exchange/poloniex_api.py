@@ -1,9 +1,10 @@
 from datetime import datetime
 from enum import Enum
+import numpy as np
 from poloniex import Poloniex as Client
 import time
 
-import numpy as np
+from database.config import EXCHANGE_DATA
 
 
 class PoloniexOperation(Enum):
@@ -17,8 +18,8 @@ class PoloniexOperation(Enum):
 class PoloniexClientWrapper:
     MAX_TRIES = 3
     SLEEP_TRIES = 1
-    API_KEY = ""
-    API_SECRET = ""
+    API_KEY = EXCHANGE_DATA["poloniex"]["api_key"]
+    API_SECRET = EXCHANGE_DATA["poloniex"]["api_secret"]
 
     def __init__(self):
         self._client = Client(self.API_KEY, self.API_SECRET)

@@ -2,6 +2,7 @@ from enum import Enum
 import hashlib
 import time
 
+from database.config import EXCHANGE_DATA
 from exchange.rest_api import RestClient as Client
 import numpy as np
 
@@ -16,8 +17,8 @@ class DigifinexOperation(Enum):
 class DigifinexClientWrapper:
     MAX_TRIES = 3
     SLEEP_TRIES = 1
-    API_KEY = ""
-    API_SECRET = ""
+    API_KEY = EXCHANGE_DATA["digifinex"]["api_key"]
+    API_SECRET = EXCHANGE_DATA["digifinex"]["api_secret"]
 
     def __init__(self):
         self._rest_client = Client("https://openapi.digifinex.com")

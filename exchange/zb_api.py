@@ -2,6 +2,7 @@ from enum import Enum
 import re
 import time
 
+from database.config import EXCHANGE_DATA
 from exchange.rest_api import RestClient as Client
 import numpy as np
 
@@ -15,8 +16,8 @@ class ZbOperation(Enum):
 class ZbClientWrapper:
     MAX_TRIES = 3
     SLEEP_TRIES = 1
-    API_KEY = ""
-    API_SECRET = ""
+    API_KEY = EXCHANGE_DATA["zb"]["api_key"]
+    API_SECRET = EXCHANGE_DATA["zb"]["api_secret"]
 
     def __init__(self):
         self._rest_client = Client("http://api.zb.cn")
