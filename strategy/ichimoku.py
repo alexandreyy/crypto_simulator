@@ -39,10 +39,13 @@ class IchimokuStrategy:
 
     def should_buy(self, ticker_data):
         """ Check if we should buy. """
-	"TODO: Implement me"
-        return True
+        tenkan_sen, kijun_sen = compute_ichimoku(ticker_data)[:2]
+
+        return tenkan_sen >= kijun_sen
 
     def should_sell(self, ticker_data):
         """ Check if we should sell. """
-	"TODO: Implement me"
-        return True
+
+        tenkan_sen, kijun_sen = compute_ichimoku(ticker_data)[:2]
+
+        return tenkan_sen <= kijun_sen

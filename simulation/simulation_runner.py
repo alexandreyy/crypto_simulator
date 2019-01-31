@@ -29,12 +29,12 @@ class Strategy:
     def should_buy(self, ticker_data, orderbook_data):
         """ Check if we should buy. """
 
-        return self.strategy_rsio.should_buy(ticker_data)
+        return self.strategy_ich.should_buy(ticker_data)
 
     def should_sell(self, ticker_data, orderbook_data):
         """ Check if we should sell. """
 
-        return self.strategy_rsio.should_sell(ticker_data)
+        return self.strategy_ich.should_sell(ticker_data)
 
 
 if __name__ == "__main__":
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     timestamp_data = [0] * periods
     timestamp_data[-1] = 999999
     period_sec = periods * 60
-    period_sec_error = 300
+    period_sec_error = 1800
 
     while True:
         # Get current data
@@ -97,7 +97,7 @@ if __name__ == "__main__":
             ticker_data.append(ticker_join)
             timestamp_data.append(time_now)
 
-            if abs(exchange.get_timestamp() - timestamp_data[0]
+            if abs(timestamp_data[-1] - timestamp_data[0]
                    - period_sec) < period_sec_error:
                 break
 
