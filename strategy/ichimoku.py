@@ -15,9 +15,11 @@ def compute_ichimoku(data, tenkan=9, kijun=26, senkou=52,
     hi_tenkan_lag = np.max(lag_data[-tenkan:])
     lo_tenkan_lag = np.min(lag_data[-tenkan:])
     tenkan_sen_lag = (hi_tenkan_lag + lo_tenkan_lag) / 2.0
+
     hi_kijun_lag = np.max(lag_data[-kijun:])
     lo_kijun_lag = np.min(lag_data[-kijun:])
     kijun_sen_lag = (hi_kijun_lag + lo_kijun_lag) / 2.0
+
     hi_senkou = np.max(lag_data[-senkou:])
     lo_senkou = np.min(lag_data[-senkou:])
     senkou_span_a = (tenkan_sen_lag + kijun_sen_lag) / 2.0
@@ -39,13 +41,15 @@ class IchimokuStrategy:
 
     def should_buy(self, ticker_data):
         """ Check if we should buy. """
-        tenkan_sen, kijun_sen = compute_ichimoku(ticker_data)[:2]
+        tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b = \
+            compute_ichimoku(ticker_data)[:4]
 
-        return tenkan_sen >= kijun_sen
+        return tenkan_sen >= kijun_sen and senkou_span_a >= senkou_span_b
 
     def should_sell(self, ticker_data):
         """ Check if we should sell. """
 
-        tenkan_sen, kijun_sen = compute_ichimoku(ticker_data)[:2]
+        tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b = \
+            compute_ichimoku(ticker_data)[:4]
 
-        return tenkan_sen <= kijun_sen
+        return tenkan_sen < kijun_sen and senkou_span_a < senkou_span_b

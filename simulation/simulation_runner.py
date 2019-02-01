@@ -29,12 +29,16 @@ class Strategy:
     def should_buy(self, ticker_data, orderbook_data):
         """ Check if we should buy. """
 
-        return self.strategy_ich.should_buy(ticker_data)
+        decision = self.strategy_rsi.should_buy(ticker_data)
+
+        return decision
 
     def should_sell(self, ticker_data, orderbook_data):
         """ Check if we should sell. """
 
-        return self.strategy_ich.should_sell(ticker_data)
+        decision = self.strategy_rsi.should_sell(ticker_data)
+
+        return decision
 
 
 if __name__ == "__main__":
@@ -74,27 +78,30 @@ if __name__ == "__main__":
     enable_trading = False
     trade_placed = False
     stop_loss_rate = 0.025  # [0, 1]
-    wait_sell_time = 5  # in minutes.
-    wait_sell_time_counter = wait_sell_time
+    wait_sell_time = 5 * 60 # in seconds.
+    wait_sell_time_start = 0
     bought_price = 0
     strategy = Strategy(trade_fee)
     ticker_data = [0] * periods
+    orderbook_data = [0] * periods
     timestamp_data = [0] * periods
     timestamp_data[-1] = 999999
     period_sec = periods * 60
     period_sec_error = 1800
 
     while True:
-        # Get current data
+        # Get current data.
         while True:
             exchange.increment_time()
             orderbook = exchange.get_orderbook()
-            orderbook_data = exchange.get_orderbook_join()
+            orderbook_join = exchange.get_orderbook_join()
             ticker_join = exchange.get_ticker_join()
             time_now = exchange.get_timestamp()
             ticker_data.pop(0)
+            orderbook_data.pop(0)
             timestamp_data.pop(0)
             ticker_data.append(ticker_join)
+            orderbook_data.append(orderbook_join)
             timestamp_data.append(time_now)
 
             if abs(timestamp_data[-1] - timestamp_data[0]
@@ -103,8 +110,6 @@ if __name__ == "__main__":
 
         if enable_trading:
             # Check if we should buy or sell.
-            wait_sell_time_counter += 1
-
             if strategy.should_buy(ticker_data, orderbook_data):
                 from_coin = base_coin
                 to_coin = coin
@@ -117,14 +122,14 @@ if __name__ == "__main__":
                                         exchange.get_balance(from_coin),
                                         "buy")
                     bought_price = orderbook[0][2]
-                    wait_sell_time_counter = 0
+                    wait_sell_time_start = exchange.get_timestamp()
             else:
                 stop_loss = orderbook[0][2] * (1 - trade_fee) <= \
                             bought_price * (1 + trade_fee - stop_loss_rate)
 
                 if (strategy.should_sell(ticker_data, orderbook_data) and
-                    wait_sell_time_counter >= wait_sell_time) or \
-                   stop_loss:
+                    (exchange.get_timestamp() - wait_sell_time_start) >= 
+                     wait_sell_time) or stop_loss:
 
                     from_coin = coin
                     to_coin = base_coin
